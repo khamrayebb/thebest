@@ -1,0 +1,141 @@
+<style>
+  .basket__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .item-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    overflow: hidden ;
+    border: 5px solid gold;
+  }
+
+  .item-img img {
+    width: 100%;
+  }
+
+  .item-quantity {
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+  }
+
+  .item-price {
+    font-size: 18px;
+  }
+
+
+  .item-delete i {
+    font-size: 24px;
+    transition: all .2s !important;
+    color: rgb(87, 87, 87);
+  }
+
+  .item-delete i:hover {
+    color: red !important
+  }
+
+  /* order */
+
+  .cart__final {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .final-price {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .item-img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .item-quantity {
+      width: 80px;
+      font-size: 14px;
+    }
+
+    .item-price {
+      font-size: 12px;
+    }
+
+    .item-title {
+      font-size: 14px;
+      text-transform: capitalize;
+    }
+
+    .item-quantity {
+      font-size: 14px !important;
+    }
+  }
+
+
+
+
+
+</style>
+
+{% extends 'header.html' %}
+
+{% block content %}
+
+<h3 class="text-center mt-5 mb-5">Ваша корзина {% if not cart.products.count %}пуста{% endif %}</h3>
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+ 
+    {% endfor %}
+{% endif %}
+
+
+{% if cart.products.count %}
+<div class="basket">
+  {% for item in cart.products.all %}
+  <div class="basket__item">
+    <div class="item-img">
+      <img src="{{ item.product.image.url }}" alt="prod img">
+    </div>
+    <h3 class="item-title">
+      {{ item.product.title }}
+    </h3>
+    <form action="{% url 'change_qty' slug=item.product.slug %}" class="item-quantity"  method="POST">
+      {% csrf_token %}
+      <input type="number" name="qty"  min="1" value="{{ item.qty }}" class="form-control mb-2" >
+      <input type="submit" class="btn btn-primary item-quantity" value="Изм. кол.">
+    </form>
+    <div class="item-price">
+      <span>
+        {{ item.final_price }} сум.
+      </span>
+    </div>
+    <a href="{% url 'delete_from_cart' slug=item.product.slug %}" class="item-delete"><i class="fas fa-trash"></i></a>
+  </div>
+  {% endfor %}
+</div>
+<hr>
+  <div class="cart__final">
+    <div class="final-price">
+      <span class="mr-5">Итого: &nbsp; {{ cart.total_products }}</span>
+      <span class="text-danger">{{ cart.final_price }} cум.</span>
+    </div>
+    <a href="{% url 'checkout' %}"  class="btn btn-success final-action">Перейти к оформлению</a>
+  </div>
+
+{% endif %}
+
+{% endblock content %}
+

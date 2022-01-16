@@ -1,0 +1,123 @@
+<style>
+  .cards__box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .product__cart {
+      width: 300px;
+      height: auto;
+      background-color: #222222;
+      border-radius: 15px;
+      overflow: hidden;
+      backface-visibility: hidden;
+      margin: 0 40px;
+    }
+
+    .product__cart-img {
+      width: 100%;
+      height: 300px;
+      border-bottom-left-radius: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      padding: 4rem;
+      background-color: #eee;
+    }
+
+  
+    
+    .product__cart-img a img {
+      width: 100%;
+    }
+
+    .product__cart-content {
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+
+    }
+
+    .product__cart-content a {
+     text-decoration: none;
+     color: #fff
+    }
+
+    .content-title {
+      color: #fff;
+      font-size: 32px;
+      margin-bottom: 0.3rem;
+
+    }
+
+    .content-price {
+      color: #fff;
+      font-size: 16px;
+      text-align: right;
+    }
+
+    .product__cart-action {
+      padding: 20px;
+    }
+
+    .content-action {
+      margin-top: .5rem;
+    }
+</style>
+
+{% extends 'header.html' %}
+{% load search_filter %}
+
+{% block productfilter %}
+
+      <form class="d-flex mt-3" action="{% url 'category_detail' slug=category.slug %}" method="GET">
+        <input class="form-control me-2" name="search" type="search" placeholder="Поиск товара" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Поиск</button>
+      </form>
+    <hr>
+    <form action="{% url 'category_detail' slug=category.slug %}" method="GET">
+        {{ category|product_spec }}
+    <p class="text-center">
+        <button class="btn btn-outline-success" type="submit">Поиск</button>
+        <button class="btn btn-outline-info" type="submit">Сбросить</button>
+    </p>
+    </form>
+
+{% endblock productfilter %}
+{% block content %}
+    <nav aria-label="breadcrumb" class="mt-5 ">
+      <ol class="breadcrumb bg-dark ">
+        <li class="breadcrumb-item"><a href="{% url 'base' %}">Главная</a></li>
+        <li class="breadcrumb-item active text-white">{{ category.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="cards__box">
+    {% for product in category_products %}
+    <div class="row mb-3">
+
+ 
+
+  <div class="product__cart">
+    <div class="product__cart-img">
+      <a href="{{ product.get_absolute_url }}">
+        <img src="{{ product.image.url }}" alt="product img">
+      </a>
+    </div>
+    <div class="product__cart-content">
+      <a href="{{ product.get_absolute_url }}" class="content-title">
+        {{ product.title }}
+      </a>
+      <span class="content-price">{{ product.price }} сум</span>
+      <a class='btn btn-warning content-action' href="{% url 'add_to_cart' slug=product.slug %}" class="action-cart">Добавить в корзину</a>
+
+    </div>
+    
+  </div>
+</div>
+  {% endfor %}
+</div>
+{% endblock content %}

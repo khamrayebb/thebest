@@ -1,0 +1,138 @@
+<style>
+    .detail {
+      display: flex;
+      background-color: #222831;
+      padding-right: 2.5rem;
+      border-radius: 10px;
+      font-family: 'Dancing Script', cursive;
+      color: #fff;
+    }
+/* image */
+    .detail__img {
+      width: 30%;
+      padding: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .img-box {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid #dcc435;
+    }
+
+    .img-box img{
+      width: 100%;
+      transition: all .2s;
+    }
+
+
+    .img-box img:hover {
+     transform: scale(1.2);
+    }
+
+    
+/* content */
+    .detail__content-title {
+      font-size: 24px;
+    }
+
+    .detail__content-description {
+      font-size: 18px;
+    }
+
+    .detail__content-price {
+      font-size: 20px;
+    }
+
+    .detail__content {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 0;
+    }
+
+    .detail__button {
+      height: 50px;
+      width: 200px;
+      border-radius: 25px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    /* responsive */
+
+    @media screen and (max-width: 768px) {
+      .detail__img {
+        width: 50%;
+      }
+      .detail__content {
+        width: 50%;
+      }
+
+      .img-box {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 5px solid #dcc435;
+      }
+
+      .detail__button {
+        height: 40px;
+        width: 150px;
+        font-size: 14px!important;
+
+      }
+
+      .detail__content-title {
+        font-size: 18px;
+      }
+
+      .detail__content-description {
+        font-size: 12px;
+      }
+
+      .detail__content-price {
+        font-size: 14px;
+      }
+      
+
+    }
+
+
+</style>
+
+{% extends 'base.html' %}
+
+{% block content %}
+    <nav aria-label="breadcrumb" class="mt-5">
+      <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="{% url 'base' %}">Главная</a></li>
+        <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+      </ol>
+    </nav>
+  <div class="detail">
+    <div class="detail__img">
+      <div class="img-box">
+        <img src="{{ product.image.url }}" alt="product  img">
+      </div>
+    </div>
+    <div class="detail__content">
+      <span class="detail__content-title">{{ product.title }}</span>
+      <span class="detail__content-description">{{ product.description }}</span>
+      <span class="detail__content-price">{{ product.price }} сум</span>
+      <a href="{% url 'add_to_cart' slug=product.slug %}" class="btn btn-warning detail__button">Добавить в корзину</a>
+    </div>
+  </div>
+
+  
+  
+
+{% endblock content %}
